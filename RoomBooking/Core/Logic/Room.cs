@@ -7,11 +7,13 @@ namespace RoomBooking.Core.Logic
     {
         private string _name;
         private IStatus _status;
+        private int _roomPriority;
 
-        public Room (string name)
+        public Room (string name, int roomPriority)
         {
             _name = name;
             _status = new AvailableStatus(this);
+            _roomPriority = roomPriority;   
         }
 
         public bool CheckinRoom()
@@ -53,6 +55,11 @@ namespace RoomBooking.Core.Logic
         internal void ChangeRoomStatus(IStatus status)
         {
             this._status = status;
+        }
+
+        public int Priority()
+        {
+            return _roomPriority;
         }
     }
 }
