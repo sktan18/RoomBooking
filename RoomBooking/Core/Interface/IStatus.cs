@@ -12,5 +12,6 @@ namespace RoomBooking.Core.Interface
 
         public bool RepairRoom();
 
+        public bool RoomRepaired();
     } 
 }

@@ -11,22 +11,28 @@ namespace RoomBooking.Core.RoomStatuses
 
         public bool CheckinRoom()
         {
-            throw new NotImplementedException();
+            this._room.ChangeRoomStatus(new OccupiedStatus(this._room));
+            return true;
         }
 
         public bool CheckoutRoom()
         {
-            throw new NotImplementedException();
+            return false;
         }
 
         public bool CleanRoom()
         {
-            throw new NotImplementedException();
+            return false;
         }
 
         public bool RepairRoom()
         {
-            throw new NotImplementedException();
+            return false;
+        }
+
+        public bool RoomRepaired()
+        {
+            return false;
         }
     }
 }

@@ -4,7 +4,7 @@ namespace RoomBooking.Core.RoomStatuses
 {
     public class BaseStatus
     {
-        private Room _room;
+        internal Room _room;
 
         public BaseStatus(Room room)
         {
