@@ -47,7 +47,7 @@ namespace RoomBooking.Core.Logic
         /// <returns></returns>
         public Room? GetRoom(string roomName)
         {
-            return _sortedRooms.Values.FirstOrDefault(r => r.Name == roomName);
+            return _sortedRooms.Values.FirstOrDefault(r =>  String.Compare(r.Name, roomName, true) == 0);
         }
 
         /// <summary>

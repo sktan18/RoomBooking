@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using RoomBooking.Core.Interface;
 using RoomBooking.Core.Logic;
+using RoomBooking.Response;
 
 namespace RoomBooking.Controllers
 {
@@ -19,51 +20,76 @@ namespace RoomBooking.Controllers
         }
 
         [HttpGet]
-        public String Checkin()
+        public ActionResult<ResponseDTO> Checkin()
         {
+            ResponseDTO responseDTO = new ResponseDTO();
             Room? room = _engine.AssignRoom();
-            if (room == null)
-                return "No rooms are available at this moment. Please try again later";
-            return $"You may now proceed to {room}";
+
+            if (room != null)
+            {
+                responseDTO.Description = $"You may now proceed to {room}";
+                return Ok(responseDTO);
+            }
+
+            responseDTO.Description = "No rooms are available at this moment. Please try again later";
+
+            return BadRequest(responseDTO);
         }
 
         [HttpPut("{roomName}/checkout")]
-        public String Checkout(string roomName)
+        public ActionResult<ResponseDTO> Checkout(string roomName)
         {
+            ResponseDTO responseDTO = new ResponseDTO();
             Room? room = _engine.GetRoom(roomName);
-            if (room == null)
-                return "Invalid room name";
-            if (room.CheckoutRoom())
+
+            if (room != null && room.CheckoutRoom())
             {
-                return $"You have successfully checked out {room}";
+                responseDTO.Description = $"You have successfully checked out {room}";
+                return Ok(responseDTO);
             }
-            return "Failed to checkout room, please try again later";
+            
+            return HandleErrors(room, "Failed to checkout room, please try again later");
         }
 
         [HttpPut("{roomName}/cleaned")]
-        public String Cleaned(string roomName)
+        public ActionResult<ResponseDTO> Cleaned(string roomName)
         {
+            ResponseDTO responseDTO = new ResponseDTO();
             Room? room = _engine.GetRoom(roomName);
-            if (room == null)
-                return "Invalid room name";
-            if (room.CleanRoom())
+
+
+            if (room != null && room.CleanRoom())
             {
-                return $"You have successfully cleaned {room}";
+                responseDTO.Description = $"You have successfully cleaned {room}";
+                return Ok(responseDTO);
             }
-            return "Failed to clean room, please try again later";
+
+            return HandleErrors(room, "Failed to clean room, please try again later");
         }
 
         [HttpPut("{roomName}/repair")]
-        public String Repair(string roomName)
+        public ActionResult<ResponseDTO> Repair(string roomName)
         {
+            ResponseDTO responseDTO = new ResponseDTO();
             Room? room = _engine.GetRoom(roomName);
-            if (room == null)
-                return "Invalid room name";
-            if (room.RepairRoom())
+
+            if (room != null && room.RepairRoom())
             {
-                return $"You have successfully mark {room} for Repair";
+                responseDTO.Description = $"You have successfully mark {room} for Repair";
+                return Ok(responseDTO);
             }
-            return "Failed to repair room, please try again later";
+
+            return HandleErrors(room, "Failed to repair room, please try again later");
+        }
+
+        private ActionResult<ResponseDTO> HandleErrors(Room? room, string errorMsg)
+        {
+            ResponseDTO responseDTO = new ResponseDTO();
+            if (room == null)
+                responseDTO.Description = "Invalid room name";
+            else
+                responseDTO.Description = errorMsg;
+            return BadRequest(responseDTO);
         }
 
         [HttpGet("ListAvailableRooms")]
