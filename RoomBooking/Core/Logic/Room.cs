@@ -6,7 +6,7 @@ namespace RoomBooking.Core.Logic
     public class Room
     {
         public string Name { get; set; }
-        private IStatus Status { get; set; }
+        public IStatus Status { get; set; }
         private int RoomPriority { get; set; }
 
         /// <summary>
