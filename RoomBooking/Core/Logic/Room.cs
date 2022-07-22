@@ -5,61 +5,114 @@ namespace RoomBooking.Core.Logic
 {
     public class Room
     {
-        private string _name;
-        private IStatus _status;
-        private int _roomPriority;
+        public string Name { get; set; }
+        private IStatus Status { get; set; }
+        private int RoomPriority { get; set; }
 
-        public Room (string name, int roomPriority)
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="name">Room name</param>
+        /// <param name="roomPriority">Allocation priority (Lower gets allocated first)</param>
+        public Room(string name, int roomPriority)
         {
-            _name = name;
-            _status = new AvailableStatus(this);
-            _roomPriority = roomPriority;   
+            Name = name;
+            Status = new AvailableStatus(this);
+            RoomPriority = roomPriority;
         }
 
+        /// <summary>
+        /// Check in room and change to Occupied
+        /// </summary>
+        /// <returns></returns>
         public bool CheckinRoom()
         {
-            if (_status.CheckinRoom())
+            if (Status.CheckinRoom())
             {
                 return true;
             }
             return false;
         }
 
+        /// <summary>
+        /// Check out room and change to Vacant
+        /// </summary>
+        /// <returns></returns>
         public bool CheckoutRoom()
         {
-            if (_status.CheckoutRoom())
+            if (Status.CheckoutRoom())
             {
                 return true;
             }
             return false;
         }
 
+        /// <summary>
+        /// Clean Room and change to Available
+        /// </summary>
+        /// <returns></returns>
         public bool CleanRoom()
         {
-            if (_status.CleanRoom())
+            if (Status.CleanRoom())
             {
                 return true;
             }
             return false;
         }
 
+        /// <summary>
+        /// Repair room and change to Repair
+        /// </summary>
+        /// <returns></returns>
         public bool RepairRoom()
         {
-            if (_status.RepairRoom())
+            if (Status.RepairRoom())
             {
                 return true;
             }
             return false;
         }
 
-        internal void ChangeRoomStatus(IStatus status)
+        /// <summary>
+        /// Repair is completed and change room to Vacant
+        /// </summary>
+        /// <returns></returns>
+        public bool RoomRepaired()
         {
-            this._status = status;
+            if (Status.RoomRepaired())
+            {
+                return true;
+            }
+            return false;
         }
 
-        public int Priority()
+        /// <summary>
+        /// Returns if room is Available
+        /// </summary>
+        /// <returns></returns>
+        public bool isAvailable()
         {
-            return _roomPriority;
+            return Status is AvailableStatus;
         }
+
+        /// <summary>
+        /// Change room to given status
+        /// </summary>
+        /// <param name="status"></param>
+        internal void ChangeRoomStatus(IStatus status)
+        {
+            this.Status = status;
+        }
+
+        /// <summary>
+        /// Override ToString printing
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            return $"Room {Name}";
+        }
+
+
     }
 }
